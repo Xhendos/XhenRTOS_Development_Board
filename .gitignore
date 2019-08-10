@@ -1,0 +1,13 @@
+# Vim
+*.swp
+
+# C
+*.o
+
+# Link & build	
+*.elf
+*.bin
+*.map
+
+# Gdb
+.gdbinit
