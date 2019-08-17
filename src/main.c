@@ -1,5 +1,9 @@
 #include "stm32f103xb.h"
 
+#define F_CPU   72000000                /* Clock frequency is 72 000 000 Hz or 72 MHz */
+
+#define __delay_us(X)   for(volatile int i = 0; i < X / 0.14; i++) { __asm("nop"); }
+
 int main()
 {
     RCC->CR |= RCC_CR_HSEON;            /* Turn on the external high speed oscillator clock source */
@@ -19,6 +23,21 @@ int main()
     while(!(RCC->CR & RCC_CR_PLLRDY));  /* Wait untill the PLL is locked (which means ready) */
                                         /* We should have a 72 MHz clock speed at this point */
     
+    RCC->APB2ENR |= RCC_APB2ENR_AFIOEN |    /* Enable alternative function I/O module */
+                    RCC_APB2ENR_IOPAEN |    /* Enable GPIO port A module */ 
+                    RCC_APB2ENR_IOPBEN |    /* Enable GPIO port B module */
+                    RCC_APB2ENR_SPI1EN;     /* Enable SPI1 module */
+    
+    RCC->APB2RSTR |= RCC_APB2RSTR_AFIORST |
+                     RCC_APB2RSTR_IOPARST |      
+                     RCC_APB2RSTR_IOPBRST |      
+                     RCC_APB2RSTR_SPI1RST;          
+    __delay_us(100.0);                  /* Give the modules some time to reset */
+    RCC->APB2RSTR &= ~(RCC_APB2RSTR_AFIORST |
+                       RCC_APB2RSTR_IOPARST |    
+                       RCC_APB2RSTR_IOPBRST |    
+                       RCC_APB2RSTR_SPI1RST);    
+                            
 
     return 0;
 }
