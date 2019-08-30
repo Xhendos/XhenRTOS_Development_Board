@@ -2,7 +2,7 @@
 
 #define F_CPU   72000000                /* Clock frequency is 72 000 000 Hz or 72 MHz */
 
-#define __delay_us(X)   for(volatile int i = 0; i < X / 0.14; i++) { __asm("nop"); }
+#define __delay_us(X)   for(volatile int i = 0; i < X / ((1.0 / (float) F_CPU) * 1000000 ); i++) { __asm("nop"); }
 
 int main()
 {
@@ -37,7 +37,34 @@ int main()
                        RCC_APB2RSTR_IOPARST |    
                        RCC_APB2RSTR_IOPBRST |    
                        RCC_APB2RSTR_SPI1RST);    
-                            
+                           
+   /*****************************
+    *           *               *
+    * Pin name  * Pin function  *
+    *****************************
+    *   PA4     *   SPI1_NSS    *
+    *   PA5     *   SPI1_SCK    *
+    *   PA6     *   SPI1_MISO   *
+    *   PA7     *   SPI1_MOSI   *
+    ****************************/
+
+    GPIOA->CRL = 0;
+    GPIOA->CRL |= (GPIO_CRL_MODE4 |
+                   GPIO_CRL_MODE5 |
+                   GPIO_CRL_MODE7);
+    GPIOA->CRL |= (GPIO_CRL_CNF4_1 |    /* PA4 is alternative function output push pull */
+                   GPIO_CRL_CNF5_1 |    /* PA5 is alternative function output push pull */
+                   GPIO_CRL_CNF6_1 |    /* PA6 is input with pull up */
+                   GPIO_CRL_CNF7_1);    /* PA7 is alternative function output push pull */
+
+   
+    SPI1->CR1 = 0;
+    SPI1->CR1 |= (SPI_CR1_CPOL |        /* See Figure 240 in the stm32 reference manual */   
+                  SPI_CR1_CPHA);        /* This is the correct clock phase for the Nokia 5110 */
+    SPI1->CR1 |= (SPI_CR1_BR_2 |        /* Fpclk (72 MHz) / 32 = 2.25 MHz clock */
+                  SPI_CR1_BIDIOE |
+                  SPI_CR1_MSTR |
+                  SPI_CR1_SSM);         /* Slave select is managed by software (SSI bit in CR1 reg) */      
 
     return 0;
 }
