@@ -20,6 +20,4 @@ Integration with XhenRTOS should be published in this repository and functions a
 
 ## [Phases](id:section-phases)
 
-<img src="img/01_Breakout.jpeg" width="300" height="300">
-
-<img src="img/02_Breakout.jpeg" width="300" height="300">
+<img src="img/01_Breakout.jpeg" width="350" height="300"> <img src="img/02_Breakout.jpeg" width="350" height="300">
