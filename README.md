@@ -20,4 +20,5 @@ Integration with XhenRTOS should be published in this repository and functions a
 
 ## [Phases](id:section-phases)
 
-![alt text](img/01_Breakout.jpeg "Logo Title Text 1")
+<-- ![alt text](img/01_Breakout.jpeg "Logo Title Text 1") -->
+<img src="img/01_Breakout.jpeg" width="100" height="100">
