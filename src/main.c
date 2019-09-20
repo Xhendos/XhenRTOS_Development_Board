@@ -66,5 +66,7 @@ int main()
                   SPI_CR1_MSTR |
                   SPI_CR1_SSM);         /* Slave select is managed by software (SSI bit in CR1 reg) */      
 
+    
+    
     return 0;
 }
