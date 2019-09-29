@@ -5,12 +5,6 @@
 #include "spi.h"
 #include "display/nokia5110.h"
 
-void writeChar(uint8_t character)
-{
-    for(uint8_t idx = 0; idx < 5; idx++);
-        //Spi1Transmit(ASCII[character - 0x20][idx]);
-}
-
 int main()
 {
     RCC->CR |= RCC_CR_HSEON;            /* Turn on the external high speed oscillator clock source */
