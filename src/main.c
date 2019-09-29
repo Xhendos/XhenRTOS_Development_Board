@@ -1,8 +1,18 @@
 #include "stm32f103xb.h"
 
-#define F_CPU   72000000                /* Clock frequency is 72 000 000 Hz or 72 MHz */
+#include "util/delay.h"
 
-#define __delay_us(X)   for(volatile int i = 0; i < X / ((1.0 / (float) F_CPU) * 1000000 ); i++) { __asm("nop"); }
+#include "spi.h"
+
+
+void SPI_Transmit(uint8_t data)
+{
+
+    SPI1->DR = data;
+    while(SPI1->SR & SPI_SR_BSY);
+    __delay_us(0.01);    
+    return;
+}
 
 int main()
 {
@@ -37,7 +47,8 @@ int main()
                        RCC_APB2RSTR_IOPARST |    
                        RCC_APB2RSTR_IOPBRST |    
                        RCC_APB2RSTR_SPI1RST);    
-                           
+
+
    /*****************************
     *           *               *
     * Pin name  * Pin function  *
@@ -52,21 +63,59 @@ int main()
     GPIOA->CRL |= (GPIO_CRL_MODE4 |
                    GPIO_CRL_MODE5 |
                    GPIO_CRL_MODE7);
-    GPIOA->CRL |= (GPIO_CRL_CNF4_1 |    /* PA4 is alternative function output push pull */
-                   GPIO_CRL_CNF5_1 |    /* PA5 is alternative function output push pull */
+    GPIOA->CRL |= (GPIO_CRL_CNF5_1 |    /* PA5 is alternative function output push pull */
                    GPIO_CRL_CNF6_1 |    /* PA6 is input with pull up */
                    GPIO_CRL_CNF7_1);    /* PA7 is alternative function output push pull */
 
+    GPIOA->CRL |= (GPIO_CRL_MODE3 |     /* PA3 is general purpose output push pull */
+                   GPIO_CRL_MODE0);     /* PA0 is general purpose output push pull */
+    GPIOA->CRL &= ~(GPIO_CRL_CNF3 |
+                    GPIO_CRL_CNF0); 
    
-    SPI1->CR1 = 0;
-    SPI1->CR1 |= (SPI_CR1_CPOL |        /* See Figure 240 in the stm32 reference manual */   
-                  SPI_CR1_CPHA);        /* This is the correct clock phase for the Nokia 5110 */
-    SPI1->CR1 |= (SPI_CR1_BR_2 |        /* Fpclk (72 MHz) / 32 = 2.25 MHz clock */
-                  SPI_CR1_BIDIOE |
-                  SPI_CR1_MSTR |
-                  SPI_CR1_SSM);         /* Slave select is managed by software (SSI bit in CR1 reg) */      
+    GPIOA->BSRR |= 1 << 16;             /* Reset the Nokia 5110 (this must be done according to the datasheet 
+                                         *  Because register- and RAM content is undefined */ 
+    __delay_us(2.0);                    /* Give the Nokia 5110 a little bit of time */
+    GPIOA->BSRR |= 1;
 
+
+
+    Spi1Init(FPCLK_DIV_32, CLOCKPHASE_0, 1, 1, 0, 1);
+    Spi1Enable();
+
+    /*****************************
+    *           *               *
+    * Pin name  * Pin function  *
+    *****************************
+    *   PA0     *   RESET       *
+    *   PA3     *   Data/Cmd    *
+    ****************************/
     
+    GPIOA->BSRR |= (1 << 4);            /* Set the Chip Select (CS) high */ 
+    __delay_us(20.0);                   /* Wait a moment */
+    GPIOA->BSRR |= (1 << 20);           /* Set the CS pin low. At this point the Nokia 5110 is waiting for data */
     
+    Spi1Transmit(0x21);                 /* This is a Minimal Working Example (MWE) to draw a letter 'p' */
+    Spi1Transmit(0xB8);
+    Spi1Transmit(0x04);
+    Spi1Transmit(0x14);
+    Spi1Transmit(0x20);
+    Spi1Transmit(0x0C);
+
+    GPIOA->BSRR |= (1 << 3);
+    __delay_us(0.1F);
+    
+    Spi1Transmit(0x7F);
+    Spi1Transmit(0x09);
+    Spi1Transmit(0x09);
+    Spi1Transmit(0x09);
+    Spi1Transmit(0x06);
+    Spi1Transmit(0);
+   
+    GPIOA->BSRR |= (1 << 4);            /* Set the CS pin high. This means the end of the transmission */
+
+
+
+    while(1);
+
     return 0;
 }
