@@ -20,7 +20,9 @@ typedef enum
 
 void Nokia5110_Init(NokiaDisplayMode_t nokiaDisplayMode);
 
+void Nokia5110_WriteChar(char c);
 
+void Nokia5110_WriteString(char *s);
 
 
 #endif  /* _NOKIA5110_H */

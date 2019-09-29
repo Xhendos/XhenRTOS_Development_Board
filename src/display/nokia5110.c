@@ -2,7 +2,9 @@
 #include "../spi.h"
 #include "../util/delay.h"
 
+
 #include "nokia5110.h"
+#include "nokia5110_font.h"
 
 void Nokia5110_Init(NokiaDisplayMode_t nokiaDisplayMode)
 {   
@@ -40,6 +42,27 @@ void Nokia5110_Init(NokiaDisplayMode_t nokiaDisplayMode)
             break;
     }
 
+    GPIOA->BSRR |= (1 << 4);       /* Set the CS pin high. We are finished writing */
+    
+    return;
+}
+
+void Nokia5110_WriteChar(char c)
+{
+    GPIOA->BSRR |= (1 << 20);       /* Set the CS pin low. We are ready to write data */
+    GPIOA->BSRR |= (1 << 3);        /* We want to write data and not a command */
+    
+    for(uint8_t idx = 0; idx < 5; idx++)
+        Spi1Transmit(ASCII[c - 0x20][idx]);
+
+    __delay_us(2.0);                /* To avoid glitched characters, wait before toggling pin */
+    GPIOA->BSRR |= (1 << 4);        /* Set the CS pin high. We are finished writing data */
 
 }
 
+void Nokia5110_WriteString(char *s)
+{
+    while(*s)
+        Nokia5110_WriteChar(*s++);
+
+}

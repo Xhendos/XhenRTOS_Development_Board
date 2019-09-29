@@ -70,8 +70,12 @@ int main()
                     GPIO_CRL_CNF0); 
   
 
-    Nokia5110_Init(NOKIA_ALLON);        /* Initialise Nokia 5110 display. This function does all the reset and init registers */
+    Nokia5110_Init(NOKIA_NORMAL);       /* Initialise Nokia 5110 display. This function does all the reset and init registers */
 
+    __delay_us(1.0);
+    Nokia5110_WriteChar('p');
+
+    Nokia5110_WriteString("hello, world");
     while(1);
 
     return 0;
