@@ -62,7 +62,7 @@ void Nokia5110_WriteChar(char c)
 
 void Nokia5110_WriteString(char *s)
 {
-    while(*s)
-        Nokia5110_WriteChar(*s++);
+    while(*s)                       /* While the character is not NULL */
+        Nokia5110_WriteChar(*s++);  /* Write the character and post increment after function call complete */
 
 }
