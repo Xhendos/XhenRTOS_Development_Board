@@ -52,6 +52,7 @@ AS_SRC    = STM32F103CBT6_boot.S
 AS_SRC   += STM32F103CBT6_vt.S
 C_SRC	 += ./src/main.c
 C_SRC	 += ./src/spi.c
+C_SRC	 += ./src/display/nokia5110.c
 
 INCLUDE  += -I./
 INCLUDE  += -I./src
