@@ -66,11 +66,20 @@ int main()
 
     Nokia5110_Init(NOKIA_NORMAL);       /* Initialise Nokia 5110 display. This function does all the reset and init registers */
 
-    __delay_us(1.0);
-    Nokia5110_WriteChar('p');
+    Nokia5110_ClearRam();
+    __delay_us(20.0);
+    Nokia5110_WriteString("Hello, world!");
 
-    Nokia5110_WriteString("hello, world");
-    while(1);
+
+    
+    while(1)
+    {
+        Nokia5110_DisplayMode(NOKIA_INVERSE);
+        __delay_us(1000.0);
+        Nokia5110_DisplayMode(NOKIA_NORMAL);
+        __delay_us(1000.0);
+        
+    }
 
     return 0;
 }

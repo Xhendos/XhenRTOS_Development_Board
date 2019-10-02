@@ -24,5 +24,8 @@ void Nokia5110_WriteChar(char c);
 
 void Nokia5110_WriteString(char *s);
 
+void Nokia5110_DisplayMode(NokiaDisplayMode_t mode);
+
+void Nokia5110_ClearRam();
 
 #endif  /* _NOKIA5110_H */
