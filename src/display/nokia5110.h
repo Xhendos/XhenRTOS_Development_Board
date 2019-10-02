@@ -28,4 +28,8 @@ void Nokia5110_DisplayMode(NokiaDisplayMode_t mode);
 
 void Nokia5110_ClearRam();
 
+_Bool Nokia5110_SetX(uint8_t x);
+
+_Bool Nokia5110_SetY(uint8_t y);
+
 #endif  /* _NOKIA5110_H */

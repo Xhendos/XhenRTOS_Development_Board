@@ -68,8 +68,11 @@ int main()
 
     Nokia5110_ClearRam();
     __delay_us(20.0);
-    Nokia5110_WriteString("Hello, world!");
 
+    Nokia5110_SetX(20);
+    Nokia5110_SetY(2);
+
+    Nokia5110_WriteString("Hello, world");
 
     
     while(1)

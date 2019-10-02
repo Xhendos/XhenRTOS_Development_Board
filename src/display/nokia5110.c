@@ -111,3 +111,40 @@ void Nokia5110_ClearRam()
     GPIOA->BSRR |= (1 << 4);        /* Set the CS pin high. We are finished writing data */
 
 }
+
+_Bool Nokia5110_SetX(uint8_t x)
+{
+    if(x > 83)
+        return 0;
+
+    GPIOA->BSRR |= (1 << 19);       /* We want to write a command and not data */
+    GPIOA->BSRR |= (1 << 20);       /* Set the CS pin low. We are ready to write a command */
+
+    Spi1Transmit(0x20);             /* Use basic instruction mode */
+    Spi1Transmit(0x80 | x);
+
+    GPIOA->BSRR |= (1 << 4);        /* Set the CS pin high. We are finished writing the command */
+
+    return 1;
+}
+
+_Bool Nokia5110_SetY(uint8_t y)
+{
+    if(y > 5)
+        return 0;
+
+    GPIOA->BSRR |= (1 << 19);       /* We want to write a command and not data */
+    GPIOA->BSRR |= (1 << 20);       /* Set the CS pin low. We are ready to write a command */
+
+    Spi1Transmit(0x20);             /* Use basic instruction mode */
+    Spi1Transmit(0x40 | y);
+
+    GPIOA->BSRR |= (1 << 4);        /* Set the CS pin high. We are finished writing the command */
+
+    return 1;
+   
+
+}
+
+
+
