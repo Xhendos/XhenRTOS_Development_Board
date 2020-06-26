@@ -54,6 +54,7 @@ C_SRC	 += ./src/main.c
 INCLUDE  += -I./
 INCLUDE  += -I./src
 INCLUDE  += -I./device_headers
+INCLUDE  += -I./src/util
 
 OBJS  = $(C_SRC:.c=.o)
 OBJS += $(CPP_SRC:.cpp=.o)
