@@ -82,7 +82,7 @@ vtable:
     .word 0
     .word 0
     .word 0
-    .word 0
+    .word TIM6_IRQ_handler
     .word 0
 
     /*
@@ -195,6 +195,8 @@ vtable:
     .thumb_set RTC_alarm_IRQ_handler, default_interrupt_handler
     .weak USB_wakeup_IRQ_handler
     .thumb_set USB_wakeup_IRQ_handler, default_interrupt_handler
+    .weak TIM6_IRQ_handler
+    .thumb_set TIM6_IRQ_handler, default_interrupt_handler
 .size vtable, .-vtable
 
 /*

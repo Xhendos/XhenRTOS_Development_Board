@@ -141,6 +141,7 @@ typedef enum
   EXTI15_10_IRQn              = 40,     /*!< External Line[15:10] Interrupts                      */
   RTC_Alarm_IRQn              = 41,     /*!< RTC Alarm through EXTI Line Interrupt                */
   USBWakeUp_IRQn              = 42,     /*!< USB Device WakeUp from suspend through EXTI Line Interrupt */
+  TIM6_IRQn                   = 54,     /*!< TIM6 global interrupt                                */
 } IRQn_Type;
 
 /**
@@ -545,6 +546,21 @@ typedef struct
   __IO uint32_t OR;              /*!< TIM option register,                         Address offset: 0x50 */
 }TIM_TypeDef;
 
+typedef struct
+{
+    __IO uint32_t CR1;          
+    __IO uint32_t CR2;
+    __IO uint32_t RESERVED1;
+    __IO uint32_t DIER;
+    __IO uint32_t SR;
+    __IO uint32_t EGR;
+    __IO uint32_t RESERVED2;
+    __IO uint32_t RESERVED3;
+    __IO uint32_t RESERVED4;
+    __IO uint32_t CNT;
+    __IO uint32_t PSC;
+    __IO uint32_t ARR;
+}TIM_Typedef_E;
 
 /** 
   * @brief Universal Synchronous Asynchronous Receiver Transmitter
@@ -633,6 +649,7 @@ typedef struct
 #define TIM2_BASE             (APB1PERIPH_BASE + 0x00000000U)
 #define TIM3_BASE             (APB1PERIPH_BASE + 0x00000400U)
 #define TIM4_BASE             (APB1PERIPH_BASE + 0x00000800U)
+#define TIM6_BASE             (APB1PERIPH_BASE + 0x00001000U)
 #define RTC_BASE              (APB1PERIPH_BASE + 0x00002800U)
 #define WWDG_BASE             (APB1PERIPH_BASE + 0x00002C00U)
 #define IWDG_BASE             (APB1PERIPH_BASE + 0x00003000U)
@@ -695,6 +712,7 @@ typedef struct
 #define TIM2                ((TIM_TypeDef *)TIM2_BASE)
 #define TIM3                ((TIM_TypeDef *)TIM3_BASE)
 #define TIM4                ((TIM_TypeDef *)TIM4_BASE)
+#define TIM6                ((TIM_Typedef_E *) TIM6_BASE)
 #define RTC                 ((RTC_TypeDef *)RTC_BASE)
 #define WWDG                ((WWDG_TypeDef *)WWDG_BASE)
 #define IWDG                ((IWDG_TypeDef *)IWDG_BASE)

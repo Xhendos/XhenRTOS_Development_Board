@@ -1,5 +1,13 @@
 #include "stm32f103xb.h"
 
+#include "util/delay.h"
+
+void TIM2_IRQ_handler()
+{
+    static int i = 0;
+    i++;
+}
+
 int main()
 {
     RCC->CR |= RCC_CR_HSEON;            /* Turn on the external high speed oscillator clock source */
@@ -18,6 +26,26 @@ int main()
     RCC->CR |= RCC_CR_PLLON;    
     while(!(RCC->CR & RCC_CR_PLLRDY));  /* Wait untill the PLL is locked (which means ready) */
                                         /* We should have a 72 MHz clock speed at this point */
+
+    RCC->APB1ENR |= (1 << 0);           /* Enable the Timer2 module */        
+    
+    RCC->APB1RSTR |= (1 << 0);          /* Reset the Timer2 module */
+    __delay_us(100.0);
+    RCC->APB1RSTR &= ~(1 << 0);
+
+    TIM2->CR1 = (1 << 7);               /* Auto-reload preload enable */
+    TIM2->DIER = (1 << 0);
+    TIM2->CNT = 65530;
+    TIM2->PSC = 35540;
+    TIM2->ARR = 34412;
+
+    TIM2->CR1 |= (1 << 0);
+
+    NVIC_SetPriority(TIM2_IRQn, 3);
+    NVIC_ClearPendingIRQ(TIM2_IRQn);
+    NVIC_EnableIRQ(TIM2_IRQn);
+
+    while(1) {}
 
 	return 0;
 }
