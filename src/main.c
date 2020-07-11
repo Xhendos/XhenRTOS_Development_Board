@@ -21,7 +21,7 @@ int main()
                  RCC_CFGR_PLLXTPRE |
                  RCC_CFGR_PLLMULL12;
 
-    RCC->CR |= RCC_CR_PLLON;
+    RCC->CR |= RCC_CR_PLLON | RCC_CR_HSEBYP;
 
     while(RCC->CR & RCC_CR_PLLRDY);
     RCC->CFGR |= RCC_CFGR_SW_1;         /* Select the PLL clock as input source for our system clock */
@@ -61,14 +61,13 @@ int main()
     USART1->CR1 |= (USART_CR1_RE |
                     USART_CR1_TE |
                     USART_CR1_UE);
-    USART1->CR2 |= USART_CR2_CPHA;
-
+    
 
     uart2_init();
 
     while(1)
     {
-        uart2_send(0xFE);
+        uart2_send(0x12);
         USART1->DR = 0xAA;
     }
 
